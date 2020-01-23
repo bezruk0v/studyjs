@@ -4,10 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
   var money = -10,
       income = 1000;
 
-  alert('Hello, World!'+ ' ' +
-  'At the moment, I have no money. Please, send me' + ' ' +
-  income + '₽');
+  let message = function() {
+    alert('Привет!'+ ' ' +
+          'Изучил git и github. Готов к заработку' + ' ' +
+          income + '₽');
+  };
 
+  document.getElementById('github').addEventListener('click', message);
+
+  
   console.log('Hello, World!'+ ' ' +
         'At the moment, I have no money. Please, send me' + ' ' +
         income + '₽');
