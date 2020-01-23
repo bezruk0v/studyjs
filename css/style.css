@@ -1,0 +1,15 @@
+.block {
+  background: darkgreen;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  }
+
+h1 {
+  color: aliceblue;
+}
+
+/* #github {
+  font-family: Arial, Helvetica, sans-serif;
+} */

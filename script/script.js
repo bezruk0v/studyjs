@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
       income = 1000;
 
   alert('Hello, World!'+ ' ' +
+  'At the moment, I have no money. Please, send me' + ' ' +
+  income + '₽');
+
+  console.log('Hello, World!'+ ' ' +
         'At the moment, I have no money. Please, send me' + ' ' +
         income + '₽');
   
