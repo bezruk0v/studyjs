@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('github').addEventListener('click', message);
 
   
-  console.log('Hello, World!'+ ' ' +
-        'At the moment, I have no money. Please, send me' + ' ' +
+  console.log('Привет, Мир!'+ ' ' +
+        'Нажми ОК и отправь мне' + ' ' +
         income + '₽');
   
   const addExpenses = [10, 200, 50, 400],
