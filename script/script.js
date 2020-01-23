@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('github').addEventListener('click', message);
 
-  
   console.log('Привет, Мир!'+ ' ' +
         'Нажми ОК и отправь мне' + ' ' +
         income + '₽');
