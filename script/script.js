@@ -9,10 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
             period = 5,
             budgetDay = money / 30;
 
-      console.log(money, income, deposit);
-      console.log(addExpenses.length);
+      console.log('Тип данных переменной "money": ',typeof money);
+      console.log('Тип данных переменной "income": ',typeof income);
+      console.log('Тип данных переменной "deposit": ',typeof deposit);
+      console.log('Длина строки "addExpenses": ',addExpenses.length);
       console.log(`Цель заработать ${mission * period}₽` + ' ' + `за период равный ${period} месяцам`);
-      console.log(addExpenses.toLowerCase().split(', '));
-      console.log(budgetDay);
+      console.log('Значения строки "addExpenses" к нижнему регистру и разбиты на массив: ',addExpenses.toLowerCase().split(', '));
+      console.log('Дневной бюджет (доход за месяц / 30): ',budgetDay);
 
 });
