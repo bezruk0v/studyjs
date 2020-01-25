@@ -1,28 +1,18 @@
 'use strict';
 document.addEventListener('DOMContentLoaded', () => {
 
-  var money = -10,
-      income = 1000;
+      const money = 15000,
+            income = 'Freelance',
+            addExpenses = 'Taxi, Products, Communal payments, Internet, Hosting, Taxes',
+            deposit = 5 !== 1,
+            mission = 100500,
+            period = 5,
+            budgetDay = money / 30;
 
-  let message = function() {
-    alert('Привет!' + ' ' +
-          'Изучил git и github. Готов к заработку' + ' ' +
-          income + '₽');
-  };
+      console.log(money, income, deposit);
+      console.log(addExpenses.length);
+      console.log(`Цель заработать ${mission * period}₽` + ' ' + `за период равный ${period} месяцам`);
+      console.log(addExpenses.toLowerCase().split(', '));
+      console.log(budgetDay);
 
-  document.getElementById('github').addEventListener('click', message);
-
-  console.log('Hello, World!' + ' ' +
-        'At the moment, I have no money. Please, send me' + ' ' +
-        income + '₽');
-  
-  const addExpenses = [10, 200, 50, 400],
-        deposit = 100;
-
-  let mission = money + income,
-      period = [100, 2234, 3000, [ 4 - 1 ], 'q'];
-
-  console.log(mission + deposit - addExpenses[1]);
-  console.log(period[4]);
-  
 });
