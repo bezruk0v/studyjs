@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('Дневной бюджет (доход за месяц / 30), ₽', budgetDay);
 
   const getStatusIncome = () => {
+
     if (budgetDay < 0) {
       return ('Что то пошло не так!');
     } else if (budgetDay <= 600) {
@@ -57,5 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return ('У вас высокий уровень дохода!');
     }
   };
+
   console.log(getStatusIncome());
+
 });
