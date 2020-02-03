@@ -1,2 +1,6 @@
 # VS Code файлы workspase
 *.code-workspace
+
+# тестовые файлы 
+test.js
+test.html
