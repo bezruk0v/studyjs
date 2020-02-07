@@ -1,22 +1,35 @@
-'use strict';
-document.addEventListener('DOMContentLoaded', () => {
+"use strict";
+document.addEventListener("DOMContentLoaded", () => {
+  const isNumber = n => {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+  };
 
-    const checkResult = () => {
-        let randNum = Math.floor(Math.random() * 100) + 1;
-        console.log(randNum);
+  let randNum = Math.floor(Math.random() * 100) + 1;
+  console.log(randNum);
+  let attempts = 10;
 
-        const userNumber = +prompt('Угадай число от 1 до 100');
-        console.log(userNumber);
-        if (userNumber === randNum) {
-            alert('Ура, вы угадали!');
-            confirm('Повторишь?');
-        } else if (userNumber < randNum) {
-            alert('Загаданное число меньше');
-            checkResult();
-        } else if (userNumber > randNum) {
-            alert('Загаданное число больше');
-            checkResult();
-        }
-    };
-    checkResult();
+  const resultCheck = () => {
+    if (attempts > 0) {
+      let userNumber;
+      do {
+        userNumber = +prompt("Угадай число от 1 до 100");
+      } while (!isNumber(userNumber));
+      if (userNumber === randNum) {
+        alert("Ура, вы угадали!");
+        console.log(`Вы ввели число: ${userNumber}.` + " " + `Ура, вы угадали!`);
+        // stop();
+      } else if (userNumber < randNum) {
+        attempts = attempts - 1;
+        alert(`Загаданное число меньше! Осталость попыток: ${attempts}`);
+        console.log(`Предыдущая попытка: ${userNumber}, осталость попыток: ${attempts}`);
+        resultCheck();
+      } else if (userNumber > randNum) {
+        attempts = attempts - 1;
+        alert(`Загаданное число больше! Осталость попыток: ${attempts}`);
+        console.log(`Предыдущая попытка: ${userNumber}, осталость попыток: ${attempts}`);
+        resultCheck();
+      }
+    }
+  };
+  resultCheck();
 });
