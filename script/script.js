@@ -20,12 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // stop();
       } else if (userNumber < randNum) {
         attempts = attempts - 1;
-        alert(`Загаданное число меньше! Осталость попыток: ${attempts}`);
+        alert(`Загаданное число больше! Осталость попыток: ${attempts}`);
         console.log(`Предыдущая попытка: ${userNumber}, осталость попыток: ${attempts}`);
         resultCheck();
       } else if (userNumber > randNum) {
         attempts = attempts - 1;
-        alert(`Загаданное число больше! Осталость попыток: ${attempts}`);
+        alert(`Загаданное число меньше! Осталость попыток: ${attempts}`);
         console.log(`Предыдущая попытка: ${userNumber}, осталость попыток: ${attempts}`);
         resultCheck();
       }
