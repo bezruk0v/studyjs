@@ -4,3 +4,13 @@
 # тестовые файлы 
 test.js
 test.html
+
+.idea/.gitignore
+.idea/inspectionProfiles/
+.idea/js11_wave.iml
+.idea/jsLinters/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+node_modules/
+package-lock.json
