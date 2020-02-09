@@ -42,8 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
     asking: () => {
       const addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую',
           'Машина, Коммунальные платежи, Продукты, Интернет, Сотовая связь, Хостинг');
+      if (addExpenses) {
+        appData.addExpenses = addExpenses.toLowerCase().split(', ');
+        for (let i = 0; i < 2; i++) {
+          appData.addExpenses[i] = appData.addExpenses[i].trim();
+        }
+      } else {
+        appData.addExpenses = ['вы не ввели указали возможные расходы!'];
+      }
+      /*const addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую',
+          'Машина, Коммунальные платежи, Продукты, Интернет, Сотовая связь, Хостинг');*/
       // Перевод данный строки addExpenses в массив
-      appData.addExpenses = addExpenses.toLowerCase().split(', ');
+      // appData.addExpenses = addExpenses.toLowerCase().split(',');
       appData.deposit = confirm(`Есть ли у вас депозит в банке? OK = Да`);
       appData.income = appData.getIncomeMonth();
       appData.expenses = appData.getExpensesMonth();
@@ -57,21 +67,29 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     // getIncomeMonth - функция определения возможных доходов с проверкой на число
     getIncomeMonth: () => {
-      const result = {};
+      let result = {};
       let incomeTitle = '',
           incomeValue = 0;
       if (confirm('Есть ли у тебя дополнительный источник заработка?')) {
         for (let i = +0; i < 1; i++) {
           do {
             incomeTitle = prompt('Какой у вас дополниельный заработок?', 'Таксёрство');
+            if (!incomeTitle) {
+              break;
+            }
           }
           while (isText(incomeTitle));
-          do {
-            incomeValue = prompt('Сколько в месяц вы на этом зарабатываете?', '10000');
-          }
-          while (!isNumber(incomeValue));
           if (incomeTitle) {
-            result[incomeTitle] = incomeValue;
+            do {
+              incomeValue = prompt('Сколько в месяц вы на этом зарабатываете?', '10000');
+              if (!incomeValue) {
+                break;
+              }
+            }
+            while (!isNumber(incomeValue));
+            if (incomeTitle) {
+              result[incomeTitle] = incomeValue;
+            }
           }
         }
       }
@@ -81,16 +99,25 @@ document.addEventListener('DOMContentLoaded', () => {
     getExpensesMonth: () => {
       const result = {};
       let expensesTitle = '',
-          expensesValue = 0;
-      for (let i = +0; i < 3; i++) {
+          expensesValue = 0,
+          nextExpense;
+      for (let i = 0; i < 2; i++) {
         do {
           expensesTitle = prompt('Введите обязательную статью расходов?', 'Машина ' + i);
+          if (!expensesTitle) {
+            break;
+          }
         }
         while (isText(expensesTitle));
-        do {
-          expensesValue = prompt('Во сколько это обойдется?', '1000');
+        if (expensesTitle) {
+          do {
+            expensesValue = prompt('Во сколько это обойдется?', '1000');
+            if (!expensesValue) {
+              break;
+            }
+          }
+          while (!isNumber(expensesValue));
         }
-        while (!isNumber(expensesValue));
         if (expensesTitle) {
           result[expensesTitle] = +expensesValue;
         }
@@ -139,16 +166,23 @@ document.addEventListener('DOMContentLoaded', () => {
       if (appData.deposit) {
         do {
           appData.percentDeposit = prompt('Какой годовой процент?', '10');
+          if (!appData.deposit) {
+              break;
+            } else if (!appData.percentDeposit) {
+              break;
+            }
         }
         while (!isNumber(appData.percentDeposit));
-        do {
-          appData.moneyDeposit = prompt('Какая сумма заложена?', '10000');
+        if (appData.percentDeposit) {
+          do {
+              appData.moneyDeposit = prompt('Какая сумма заложена?', '10000');
+            if (!appData.moneyDeposit) {
+              break;
+            }
+          }
+          while (!isNumber(appData.moneyDeposit));
         }
-        while (!isNumber(appData.moneyDeposit));
       }
-    },
-    calcEarnedMoney: () => {
-      return appData.budgetMonth * appData.period;
     },
 };
   appData.asking();
