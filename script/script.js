@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // метод: вычисление количества месяцев для достижения цели
     getTargetMonth: function () {
-      if (this.budgetMonth < 0) {
+      if (this.budgetMonth <= 0) {
         return 'Цель не будет достигнута';
       } else {
         return targetAmount.value / this.budgetMonth;
