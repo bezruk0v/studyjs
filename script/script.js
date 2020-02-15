@@ -71,11 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //Получаем все поля ввода с вводом текста
     const allInputs = data.querySelectorAll('input[type=text]');
     // Блокировка всех инпутов
-    allInputs.forEach((item) => {
+    allInputs.forEach(function (item) {
       item.setAttribute('disabled', 'disabled');
     });
     // Блокировка плюсов
-    document.querySelectorAll('.btn_plus').forEach((item) => {
+    document.querySelectorAll('.btn_plus').forEach(function (item) {
       item.setAttribute('disabled', 'disabled');
     });
     // Блокировка выбора периода расчетов
@@ -87,9 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   };
 
-  salaryAmount.addEventListener('click', () => {
+  salaryAmount.addEventListener('click', function () {
     let allInputs = document.querySelectorAll('input');
-    allInputs.forEach((item) => {
+    allInputs.forEach(function(item) {
       item.value = item.defaultValue;
     });
 
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     statusIncome: 0,
 
     // метод: заполнение формы данными
-    start: () => {
+    start: function () {
         this.budget = +salaryAmount.value;
         this.getExpenses();
         this.getIncomes();
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: заполнение введённых значений
-    showResult: () => {
+    showResult: function () {
       budgetMonthValue.value = this.budgetMonth;
       budgetDayValue.value = Math.floor(this.budgetDay);
       expensesMonthValue.value = +this.expensesMonth;
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: добавляет дополнительные поля "обязательных расходов", max = 3
-    addExpensesBlock: () => {
+    addExpensesBlock: function () {
       const cloneExpensesItem = expensesItems[0].cloneNode(true);
       expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesPlus);
       expensesItems = document.querySelectorAll('.expenses-items');
@@ -149,8 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: добавляет дополнительные поля "дополнительных доходов", max = 3
-    addIncomeBlock: () => {
-      let cloneIncomeItem = incomeItems[0].cloneNode(true);
+    addIncomeBlock: function () {
+      const cloneIncomeItem = incomeItems[0].cloneNode(true);
       incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomePlus);
       incomeItems = document.querySelectorAll('.income-items');
 
@@ -161,8 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: передача значений "обязательных расходов"
-    getExpenses: () => {
-      expensesItems.forEach((item) => {
+    getExpenses: function () {
+      expensesItems.forEach(function (item) {
         const itemExpenses = item.querySelector('.expenses-title').value;
         const cashExpenses = item.querySelector('.expenses-amount').value;
 
@@ -174,8 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: передача значений "дополнительных доходов"
-    getIncomes: () => {
-      incomeItems.forEach((item) => {
+    getIncomes: function () {
+      incomeItems.forEach(function (item) {
         const itemIncome = item.querySelector('.income-title').value;
         const cashIncome = item.querySelector('.income-amount').value;
 
@@ -192,9 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: заполнение поля "возможные расходы"
-    getAddExpenses: () => {
+    getAddExpenses: function () {
       let addExpenses = additionalExpensesItem.value.split(', ');
-      addExpenses.forEach((item) => {
+      addExpenses.forEach(function (item) {
         item = item.trim();
 
         if (item !== '') {
@@ -205,8 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: заполнение поля "возможные доходы"
-    getAddIncomes: () => {
-      additionalIncomeItem.forEach((item) => {
+    getAddIncomes: function () {
+      additionalIncomeItem.forEach(function (item) {
         let itemValue = item.value.trim();
 
         if (item.value !== '') {
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: вычисление суммы всех обязательных расходов
-    getExpensesMonth: () => {
+    getExpensesMonth: function () {
       for (let key in this.expenses) {
         this.expensesMonth += +this.expenses[key];
       }
@@ -225,14 +225,14 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: вычисление месячного и дневного бюджетов
-    getBudget: () => {
+    getBudget: function () {
       this.budgetMonth = this.budget + this.incomesMonth - this.expensesMonth;
       this.budgetDay = this.budgetMonth / 30;
 
     },
 
     // метод: вычисление количества месяцев для достижения цели
-    getTargetMonth: () => {
+    getTargetMonth: function () {
       if (this.budgetMonth < 0) {
         return 'Цель не будет достигнута';
       } else {
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: оценка уровня дневного дохода
-    getStatusIncome: () => {
+    getStatusIncome: function () {
       if (this.budgetDay < 0) {
         return ('Что то пошло не так!');
       } else if (this.budgetDay <= 600) {
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: определение достижения цели при отрицательном значении
-    reachTargetCheck: () => {
+    reachTargetCheck: function () {
       if (targetAmount.value < 0) {
         return ('Цель не будет достигнута');
       } else {
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод для указания % по вкладу и его сумме
-    getInfoDeposit: () => {
+    getInfoDeposit: function () {
       if (this.deposit) {
         do {
           this.percentDeposit = prompt('Какой годовой процент?', '10');
@@ -294,32 +294,32 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     // метод: посчёт накоплений
-    calcPeriod: () => {
+    calcPeriod: function () {
       return this.budgetMonth * this.setPeriod();
 
     },
 
     // метод: вывод "периода расчёта"
-    setPeriod: () => {
+    setPeriod: function () {
       periodAmount.textContent = periodSelect.value;
       return periodAmount.textContent;
 
     },
 
     // метод: сброс данных по кнопке "сбросить"
-    resetResults: () => {
+    resetResults: function () {
       // отображение кнопки "рассчитать"
       start.style.display = 'block';
       // скрытие кнопки "сбросить"
       reset.style.display = 'none';
       // разблокировка полей для ввода
-      document.querySelectorAll('input').forEach((item) => {
+      document.querySelectorAll('input').forEach(function (item) {
         item.removeAttribute('disabled');
         item.value = '';
 
       });
       // разблокировка плюсов
-      document.querySelectorAll('.btn_plus').forEach((item) => {
+      document.querySelectorAll('.btn_plus').forEach(function (item) {
         item.removeAttribute('disabled');
 
       });
@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ОС "Калькулятора" - сбрасываются результаты расчётов
   reset.addEventListener('click', appData.resetResults);
   // ОС Динамическое изменение в поле "Накопления за период"
-  periodSelect.addEventListener('input', (() => {
+  periodSelect.addEventListener('input', (function () {
     incomePeriodValue.value = this.calcPeriod();
   }).bind(appData));
 
