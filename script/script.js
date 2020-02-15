@@ -44,17 +44,25 @@ document.addEventListener('DOMContentLoaded', () => {
       // значение "Периода расчета"
       periodAmount = document.querySelector('.period-amount'),
       // все поля для вывода результатов
-      resultsTotal = document.querySelectorAll('.result-total');
+      resultsTotal = document.querySelectorAll('.result-total'),
+      // поля с левой стороны
+      data = document.querySelector('.data'),
+      // все поля ввода (пустые)
+      allInputs = document.querySelectorAll('input'),
+      // все поля ввода с вводом текста
+      allInputTexts = data.querySelectorAll('input[type=text]'),
+      // все плюсы
+      allPluses = document.querySelectorAll('.btn_plus');
 
 
   /* функция проверки введенного значения на число isNumber, с помощью
   - parseFloat извлекаем число с плавающей запятой, а
   - isFinite определяем является ли значение конечным.*/
-  function isNumber (n) {
+  const isNumber = (n) => {
     return !isNaN(parseFloat(n)) && isFinite(n);
-  }
+  };
 
-  function startDisable () {
+  const startDisable = () => {
     if (isNumber(salaryAmount.value) && salaryAmount.value > 0) {
       start.removeAttribute('disabled');
     }
@@ -62,22 +70,20 @@ document.addEventListener('DOMContentLoaded', () => {
       start.setAttribute('disabled', 'disabled');
       salaryAmount.placeholder = "Введите число";
     }
-  }
+  };
 
   //Функция для блокировки полей заполнения
-  function inputsDisable () {
-    //Получаем поля с левой стороны
-    const data = document.querySelector('.data');
-    //Получаем все поля ввода с вводом текста
-    const allInputs = data.querySelectorAll('input[type=text]');
+  const inputsDisable = () => {
     // Блокировка всех инпутов
-    allInputs.forEach(function (item) {
+    allInputTexts.forEach((item) => {
       item.setAttribute('disabled', 'disabled');
     });
     // Блокировка плюсов
-    document.querySelectorAll('.btn_plus').forEach(function (item) {
+    allPluses.forEach((item) => {
       item.setAttribute('disabled', 'disabled');
     });
+    // Блокировка чекбокса Депозита
+    depositCheck.setAttribute('disabled', 'disabled');
     // Блокировка выбора периода расчетов
     periodSelect.setAttribute('disabled', 'disabled');
     // Скрытие кнопки "Рассчитать"
@@ -85,15 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Отображение кнопки "Сбросить"
     reset.style.display = 'block';
 
-  }
-
-  salaryAmount.addEventListener('click', function () {
-    let allInputs = document.querySelectorAll('input');
-    allInputs.forEach(function(item) {
-      item.value = item.defaultValue;
-    });
-
-  });
+  };
 
   // Объект с исходными переменными (свойствами объекта)
   let appData = {
@@ -173,6 +171,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     },
 
+    // метод: вычисление суммы всех обязательных расходов
+    getExpensesMonth: function () {
+      for (let key in this.expenses) {
+        this.expensesMonth += +this.expenses[key];
+      }
+
+    },
+
     // метод: передача значений "дополнительных доходов"
     getIncomes: function () {
       incomeItems.forEach(function (item) {
@@ -213,14 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
           this.addIncome.push(itemValue);
         }
       }, this);
-
-    },
-
-    // метод: вычисление суммы всех обязательных расходов
-    getExpensesMonth: function () {
-      for (let key in this.expenses) {
-        this.expensesMonth += +this.expenses[key];
-      }
 
     },
 
@@ -310,16 +308,19 @@ document.addEventListener('DOMContentLoaded', () => {
     resetResults: function () {
       // отображение кнопки "рассчитать"
       start.style.display = 'block';
+
       // скрытие кнопки "сбросить"
       reset.style.display = 'none';
+
       // разблокировка полей для ввода
-      document.querySelectorAll('input').forEach(function (item) {
+      allInputs.forEach(function (item) {
         item.removeAttribute('disabled');
         item.value = '';
 
       });
+
       // разблокировка плюсов
-      document.querySelectorAll('.btn_plus').forEach(function (item) {
+      allPluses.forEach(function (item) {
         item.removeAttribute('disabled');
 
       });
