@@ -49,8 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
       data = document.querySelector('.data'),
       // все поля ввода (пустые)
       allInputs = document.querySelectorAll('input'),
-      // все поля ввода с вводом текста
-      allInputTexts = data.querySelectorAll('input[type=text]'),
       // все плюсы
       allPluses = document.querySelectorAll('.btn_plus');
 
@@ -72,10 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  //Функция для блокировки полей заполнения
+  // Функция для блокировки полей заполнения
   const inputsDisable = () => {
+    // все поля ввода с вводом текста
+    const allInputs = data.querySelectorAll('input[type=text]');
     // Блокировка всех инпутов
-    allInputTexts.forEach((item) => {
+    allInputs.forEach((item) => {
       item.setAttribute('disabled', 'disabled');
     });
     // Блокировка плюсов
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Блокировка чекбокса Депозита
     depositCheck.setAttribute('disabled', 'disabled');
     // Блокировка выбора периода расчетов
-    periodSelect.setAttribute('disabled', 'disabled');
+    // periodSelect.setAttribute('disabled', 'disabled');
     // Скрытие кнопки "Рассчитать"
     start.style.display = 'none';
     // Отображение кнопки "Сбросить"
@@ -132,6 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
       targetMonthValue.value = this.getTargetMonth();
       incomePeriodValue.value = this.calcPeriod();
 
+      // ОС Динамическое изменение в поле "Накопления за период"
+      periodSelect.addEventListener('input', () =>
+          incomePeriodValue.value = this.calcPeriod());
     },
 
     // метод: добавляет дополнительные поля "обязательных расходов", max = 3
@@ -322,6 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // разблокировка плюсов
       allPluses.forEach(function (item) {
         item.removeAttribute('disabled');
+        item.style.display = 'block';
 
       });
 
@@ -373,9 +377,5 @@ document.addEventListener('DOMContentLoaded', () => {
   start.addEventListener('click', inputsDisable);
   // ОС "Калькулятора" - сбрасываются результаты расчётов
   reset.addEventListener('click', appData.resetResults);
-  // ОС Динамическое изменение в поле "Накопления за период"
-  periodSelect.addEventListener('input', (function () {
-    incomePeriodValue.value = this.calcPeriod();
-  }).bind(appData));
 
 });
