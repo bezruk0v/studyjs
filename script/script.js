@@ -50,11 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
   /* функция проверки введенного значения на число isNumber, с помощью
   - parseFloat извлекаем число с плавающей запятой, а
   - isFinite определяем является ли значение конечным.*/
-  const isNumber = (n) => {
+  function isNumber (n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
-  };
+  }
 
-  const startDisable = () => {
+  function startDisable () {
     if (isNumber(salaryAmount.value) && salaryAmount.value > 0) {
       start.removeAttribute('disabled');
     }
@@ -62,10 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
       start.setAttribute('disabled', 'disabled');
       salaryAmount.placeholder = "Введите число";
     }
-  };
+  }
 
   //Функция для блокировки полей заполнения
-  const inputsDisable = () => {
+  function inputsDisable () {
     //Получаем поля с левой стороны
     const data = document.querySelector('.data');
     //Получаем все поля ввода с вводом текста
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Отображение кнопки "Сбросить"
     reset.style.display = 'block';
 
-  };
+  }
 
   salaryAmount.addEventListener('click', function () {
     let allInputs = document.querySelectorAll('input');
@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // метод: заполнение формы данными
     start: function () {
         this.budget = +salaryAmount.value;
-        this.getExpenses();
         this.getIncomes();
+        this.getExpenses();
         this.getExpensesMonth();
         this.getAddExpenses();
         this.getAddIncomes();
@@ -127,11 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // метод: заполнение введённых значений
     showResult: function () {
       budgetMonthValue.value = this.budgetMonth;
-      budgetDayValue.value = Math.floor(this.budgetDay);
+      budgetDayValue.value = this.budgetDay;
       expensesMonthValue.value = +this.expensesMonth;
       additionalExpensesValue.value = this.addExpenses.join(', ');
       additionalIncomeValue.value = this.addIncome.join(', ');
-      targetMonthValue.value = Math.ceil(this.getTargetMonth());
+      targetMonthValue.value = this.getTargetMonth();
       incomePeriodValue.value = this.calcPeriod();
 
     },
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // метод: вычисление месячного и дневного бюджетов
     getBudget: function () {
       this.budgetMonth = this.budget + this.incomesMonth - this.expensesMonth;
-      this.budgetDay = this.budgetMonth / 30;
+      this.budgetDay = Math.floor(this.budgetMonth / 30);
 
     },
 
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (this.budgetMonth <= 0) {
         return 'Цель не будет достигнута';
       } else {
-        return targetAmount.value / this.budgetMonth;
+        return Math.ceil(targetAmount.value / this.budgetMonth);
       }
 
     },
