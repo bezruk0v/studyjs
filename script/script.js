@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // ОС Динамическое изменение в поле "Накопления за период"
       periodSelect.addEventListener('input', () =>
           incomePeriodValue.value = this.calcPeriod());
+
     },
 
     // метод: добавляет дополнительные поля "обязательных расходов", max = 3
@@ -376,6 +377,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // ОС Блокировка на заполнение инпутов
   start.addEventListener('click', inputsDisable);
   // ОС "Калькулятора" - сбрасываются результаты расчётов
-  reset.addEventListener('click', appData.resetResults);
+  reset.addEventListener('click', appData.resetResults.bind(appData));
 
 });
