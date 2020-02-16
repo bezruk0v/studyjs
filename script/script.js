@@ -128,18 +128,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // метод: заполнение введённых значений
   AppData.prototype.showResult = function () {
-    budgetMonthValue.value = this.budgetMonth;
-    budgetDayValue.value = this.budgetDay;
-    expensesMonthValue.value = +this.expensesMonth;
-    additionalExpensesValue.value = this.addExpenses.join(', ');
-    additionalIncomeValue.value = this.addIncome.join(', ');
-    targetMonthValue.value = this.getTargetMonth();
-    incomePeriodValue.value = this.calcPeriod();
-
-    // ОС Динамическое изменение в поле "Накопления за период"
-    periodSelect.addEventListener('input', () => {
-      incomePeriodValue.value = this.calcPeriod();
-    });
+    budgetMonthValue.value = this.budgetMonth; // Доход за месяц
+    budgetDayValue.value = this.budgetDay; // Дневной бюджет
+    expensesMonthValue.value = +this.expensesMonth; // Расход за месяц
+    additionalIncomeValue.value = this.addIncome.join(', '); // Возможные доходы
+    additionalExpensesValue.value = this.addExpenses.join(', '); // Возможные расходы
+    incomePeriodValue.value = this.calcPeriod(); // Накопления за период
+    targetMonthValue.value = this.getTargetMonth(); // Срок достижения цели
   };
 
   // метод: добавляет дополнительные поля "обязательных расходов", max = 3
@@ -210,6 +205,14 @@ document.addEventListener('DOMContentLoaded', () => {
         this.addExpenses.push(item);
       }
     }, this);
+    // цикл: приводит значения из "обязательные расходы" в "Обязательные расходы"
+    for (let i = 0; i < this.addExpenses.length; i++) {
+      if (this.addExpenses[i]) {
+        this.addExpenses[i] = this.addExpenses[i][0].toUpperCase() + this.addExpenses[i].substring(1);
+      } else {
+        this.addExpenses = [];
+      }
+    }
   };
 
   // метод: заполнение поля "возможные доходы"
@@ -221,6 +224,14 @@ document.addEventListener('DOMContentLoaded', () => {
         this.addIncome.push(itemValue);
       }
     }, this);
+    // цикл: приводит значения из "возможный доход" в "Возможный доход"
+    for (let i = 0; i < this.addIncome.length; i++) {
+      if (this.addIncome[i]) {
+        this.addIncome[i] = this.addIncome[i][0].toUpperCase() + this.addIncome[i].substring(1);
+      } else {
+        this.addIncome = [];
+      }
+    }
   };
 
   // метод: вычисление месячного и дневного бюджетов
@@ -366,15 +377,17 @@ document.addEventListener('DOMContentLoaded', () => {
     periodSelect.addEventListener('change', function () {
       periodAmount.innerHTML = periodSelect.value;
     });
+    // ОС Динамическое изменение в поле "Накопления за период"
+    const _this = this;
+    periodSelect.addEventListener('input', function () {
+      incomePeriodValue.value = _this.calcPeriod();
+    });
     // ОС "Калькулятора" - сбрасываются результаты расчётов
-    reset.addEventListener('click', this.resetResults);
-
+    reset.addEventListener('click', this.resetResults.bind(this));
   };
 
   const appData = new AppData ();
 
   appData.eventsListeners();
-
-  console.log(appData);
 
 });
