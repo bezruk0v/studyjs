@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.budget = 0;
       this.budgetDay = 0;
       this.budgetMonth = 0;
-      this.incomes = {};
+      this.income = {};
       this.addIncome = [];
       this.incomesMonth = 0;
       this.expenses = {};
@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (!isNumber(salaryAmount.value)) {
         start.setAttribute('disabled', 'true');
-        salaryAmount.placeholder = "Здесь нужно ввести число!";
       }
     }
 
@@ -114,10 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
       this.budget = +salaryAmount.value;
 
       this.getExpInc();
-      // this.getExpenses();
-      // this.getIncomes();
-
-      this.getExpensesMonth();
       this.getAddExpenses();
       this.getAddIncomes();
       this.getBudget();
@@ -169,44 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // метод: передача значений "обязательных расходов"
-    getExpenses() {
-      expensesItems.forEach( (item) => {
-        const itemExpenses = item.querySelector('.expenses-title').value;
-        const cashExpenses = item.querySelector('.expenses-amount').value;
-
-        if (itemExpenses !== '' && !isNumber(itemExpenses) && cashExpenses !== '' && isNumber(cashExpenses)) {
-          this.expenses[itemExpenses] = cashExpenses;
-        }
-      }, this);
-    }
-
-    // метод: вычисление суммы всех обязательных расходов
-    getExpensesMonth() {
-      for (let key in this.expenses) {
-        this.expensesMonth += +this.expenses[key];
-      }
-    }
-
-    // метод: передача значений "дополнительных доходов"
-    getIncomes() {
-      incomeItems.forEach( (item) => {
-        const itemIncome = item.querySelector('.income-title').value;
-        const cashIncome = item.querySelector('.income-amount').value;
-
-        if (itemIncome !== '' && !isNumber(itemIncome) && cashIncome !== '' && isNumber(cashIncome)) {
-          this.incomes[itemIncome] = cashIncome;
-        }
-      }, this);
-
-      // цикл: подсчёт суммы дополнительных доходов
-      for (let key in this.incomes) {
-        this.incomesMonth += +this.incomes[key];
-      }
-    }
-
+    // метод: вычисление суммы всех обязательных расходов и дополнительных доходов
     getExpInc() {
-
       const count = (item) => {
         const startStr = item.className.split('-')[0];
         const itemTitle = item.querySelector(`.${startStr}-title`).value;
@@ -220,8 +179,11 @@ document.addEventListener('DOMContentLoaded', () => {
       expensesItems.forEach(count);
 
       // цикл: подсчёт суммы
-      for (let key in this.incomes) {
-        this.incomesMonth += +this.incomes[key];
+      for (let key in this.income) {
+        this.incomesMonth += +this.income[key];
+      }
+      for (let key in this.expenses) {
+        this.expensesMonth += +this.expenses[key];
       }
     }
 
@@ -355,17 +317,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // очистка полей "дополнительные доходы" и "обязательные расходы"
       for (let i = 1; i < incomeItems.length; i++) {
-        incomeItems[i].remove();
+        incomeItems[i].parentNode.removeChild(incomeItems[i]);
+        incomePlus.style.display = 'block';
       }
       for (let i = 1; i < expensesItems.length; i++) {
-        expensesItems[i].remove();
+        expensesItems[i].parentNode.removeChild(expensesItems[i]);
+        expensesPlus.style.display = 'block';
       }
 
       // обнуление значений
       this.budget = 0;
       this.budgetDay = 0;
       this.budgetMonth = 0;
-      this.incomes = {};
+      this.income = {};
       this.addIncome = [];
       this.incomesMonth = 0;
       this.expenses = {};
