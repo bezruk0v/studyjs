@@ -46,7 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
       // поле ввода "Цель"
       targetAmount = document.querySelector('.target-amount'),
       // кнопка чекбокса "Депозит"
-      depositCheckBox = document.querySelector('#deposit-check');
+      depositCheckBox = document.querySelector('#deposit-check'),
+      // список банков
+      depositBanksSelect = document.querySelector('.deposit-bank'),
+      // сумма депозита
+      depositAmount = document.querySelector('.deposit-amount'),
+      // процент по депозиту
+      depositPercent = document.querySelector('.deposit-percent');
+
 
       // поля "Дополнительных расходов"
   let incomeItems = document.querySelectorAll('.income-items'),
@@ -90,6 +97,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    checkDepositData() {
+      if (isNumber(depositAmount.value) && depositAmount.value > 0) {
+        start.removeAttribute('disabled');
+      }
+      if (!isNumber(depositAmount.value)) {
+        start.setAttribute('disabled', 'true');
+      }
+    }
+
+    checkDepositPercent() {
+      if (isNumber(depositAmount.value) && depositAmount.value > 0) {
+        if (isNumber(depositPercent.value) &&
+            depositPercent.value >= 0 &&
+            depositPercent.value <= 100) {
+          start.removeAttribute('disabled');
+        } else {
+          alert('В поле "Процент" нужно указывать только число!');
+          depositPercent.value = '';
+          start.setAttribute('disabled', 'true');
+        }
+      } else {
+        start.setAttribute('disabled', 'true');
+      }
+    }
+
     // функция (): заполнение формы данными + валидация/блоки инпутов
     startCalculator() {
       if (salaryAmount.value === '') {
@@ -115,13 +147,14 @@ document.addEventListener('DOMContentLoaded', () => {
       this.getExpInc();
       this.getAddExpenses();
       this.getAddIncomes();
-      this.getBudget();
       this.getInfoDeposit();
+      this.getBudget();
       this.getStatusIncome();
       this.showResult();
 
       // блокировка чекбокса депозита
       depositCheckBox.disabled = true;
+      depositBanksSelect.disabled = true;
 
       // блокировка выбора периода расчетов
       // periodSelect.setAttribute('disabled', 'true');
@@ -228,7 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // метод: вычисление месячного и дневного бюджетов
     getBudget() {
-      this.budgetMonth = this.budget + this.incomesMonth - this.expensesMonth;
+      const monthDeposit = this.moneyDeposit * this.percentDeposit / 100;
+      this.budgetMonth = this.budget + this.incomesMonth - this.expensesMonth + monthDeposit;
       this.budgetDay = Math.floor(this.budgetMonth / 30);
     }
 
@@ -260,33 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return ('Цель не будет достигнута');
       } else {
         return (`Цель будет достигнута за ${targetAmount.value} мес.`);
-      }
-    }
-
-    // метод для указания % по вкладу и его сумме
-    getInfoDeposit() {
-      if (this.deposit) {
-        do {
-          this.percentDeposit = prompt('Какой годовой процент?', '10');
-
-          if (!this.deposit) {
-            break;
-          } else if (!this.percentDeposit) {
-            break;
-          }
-        }
-        while (!isNumber(this.percentDeposit));
-
-        if (this.percentDeposit) {
-          do {
-            this.moneyDeposit = prompt('Какая сумма заложена?', '10000');
-
-            if (!this.moneyDeposit) {
-              break;
-            }
-          }
-          while (!isNumber(this.moneyDeposit));
-        }
       }
     }
 
@@ -349,11 +356,54 @@ document.addEventListener('DOMContentLoaded', () => {
         elem.removeAttribute('disabled');
       });
 
-      // разблокировка чекбокса и снимается выбор
+      // разблокировка чекбокса, снимается выбор, скрытие и обнуление значений инпутов
       depositCheckBox.disabled = false;
       depositCheckBox.checked = false;
+      depositBanksSelect.style.display = defaultStatus;
+      depositAmount.style.display = 'none';
+      depositPercent.style.display = 'none';
+      depositBanksSelect.value = '';
+      depositAmount.value = '';
+      depositBanksSelect.disabled = false;
 
       this.setFocus();
+    }
+
+    // метод для указания % по вкладу и его сумме
+    getInfoDeposit() {
+      if (this.deposit) {
+        this.percentDeposit = depositPercent.value;
+        if (isNumber(depositAmount.value)) {
+          this.moneyDeposit = depositAmount.value;
+        }
+      }
+    }
+
+    changePercent() {
+      const selectBankValue = this.value;
+      if (selectBankValue === 'other') {
+        depositPercent.style.display = 'inline-block';
+        depositPercent.value = '';
+      } else {
+        depositPercent.value = selectBankValue;
+        depositPercent.style.display = 'none';
+      }
+    }
+
+    depositHandler() {
+      if (depositCheckBox.checked) {
+        depositBanksSelect.style.display = 'inline-block';
+        depositAmount.style.display = 'inline-block';
+        this.deposit = true;
+        depositBanksSelect.addEventListener('change', this.changePercent);
+      } else {
+        depositBanksSelect.style.display = 'none';
+        depositAmount.style.display = 'none';
+        depositBanksSelect.value = '';
+        depositAmount.value = '';
+        this.deposit = false;
+        depositBanksSelect.removeEventListener('change', this.changePercent);
+      }
     }
 
     eventsListeners() {
@@ -365,6 +415,10 @@ document.addEventListener('DOMContentLoaded', () => {
       incomePlus.addEventListener('click', this.addIncomeBlock);
       // ОС проверка заполнения обязательного поля "Месяный доход"
       salaryAmount.addEventListener('keyup', this.checkEmptyAmount);
+      // ОС проверка правильности заполнения суммы депозита
+      depositAmount.addEventListener('input', this.checkDepositData);
+      // ОС проверка правильности заполнения процента по депозиту
+      depositPercent.addEventListener('input', this.checkDepositPercent);
       // ОС "Периода расчёта" - число меняется в соотвествии с движением ползунка
       periodSelect.addEventListener('input', this.setPeriod);
       // ОС Динамическое изменение в поле "Накопления за период"
@@ -377,6 +431,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       // ОС "Калькулятора" - сбрасываются результаты расчётов
       reset.addEventListener('click', this.resetResults.bind(this));
+
+      // ОС Депозит - вывод списка банков
+      depositCheckBox.addEventListener('change', this.depositHandler.bind(this));
     }
   }
 
