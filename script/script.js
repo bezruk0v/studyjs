@@ -1,20 +1,58 @@
-'use strict';
 document.addEventListener('DOMContentLoaded', () => {
+    'use strict';
 
-      const money = 15000,
-            income = 'Freelance',
-            addExpenses = 'Taxi, Products, Communal payments, Internet, Hosting, Taxes',
-            deposit = 5 !== 1,
-            mission = 100500,
-            period = 5,
-            budgetDay = money / 30;
+    // Таймер
+    const countTimer = (deadline) => {
+        // получаем элементы страницы
+        let timerHours = document.querySelector('#timer-hours'),
+            timerMinutes = document.querySelector('#timer-minutes'),
+            timerSeconds = document.querySelector('#timer-seconds');
 
-      console.log('Тип данных переменной "money": ',typeof money);
-      console.log('Тип данных переменной "income": ',typeof income);
-      console.log('Тип данных переменной "deposit": ',typeof deposit);
-      console.log('Длина строки "addExpenses": ',addExpenses.length);
-      console.log(`Цель заработать ${mission * period}₽` + ' ' + `за период равный ${period} месяцам`);
-      console.log('Значения строки "addExpenses" к нижнему регистру и разбиты на массив: ',addExpenses.toLowerCase().split(', '));
-      console.log('Дневной бюджет (доход за месяц / 30): ',budgetDay);
+        // определяем дедлайн и текущее время
+        const getRemainingTime = () => {
+            let dateStop = new Date(deadline).getTime(),
+                dateNow = new Date().getTime(),
+                remainingTime = (dateStop - dateNow) / 1000,
+                seconds = Math.floor(remainingTime % 60),
+                minutes = Math.floor((remainingTime / 60) % 60),
+                hours = Math.floor(remainingTime / 60 / 60);
+            // Если нужно добавить дни к таймеру:
+            // hours = Math.floor((remainingTime / 60 / 60) % 24),
+            // days = Math.floor(remainingTime / 60 / 60 / 24);
+            // console.log(days);
+
+            return {remainingTime, hours, minutes, seconds};
+        };
+
+        // форматирование таймера с добавлением нуля
+        const twoDigits = (value) => {
+            if (value < 10) {
+                value = '0' + value;
+            }
+            return value;
+        };
+
+        // обновление таймера
+        const clockUpdate = () => {
+            let timer = getRemainingTime();
+            timerHours.textContent = twoDigits(timer.hours);
+            timerMinutes.textContent = twoDigits(timer.minutes);
+            timerSeconds.textContent = twoDigits(timer.seconds);
+        };
+
+        const intervalId = setInterval(() => {
+            let timer = getRemainingTime();
+            if (timer.remainingTime > 0) {
+                clockUpdate();
+            } else {
+                clearInterval(intervalId);
+                timerHours.textContent = '--';
+                timerMinutes.textContent = '--';
+                timerSeconds.textContent = '--';
+            }
+        }, 1000);
+    };
+
+    countTimer('07 march 2020 15:30:01');
 
 });
