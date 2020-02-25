@@ -33,24 +33,23 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // обновление таймера
+        let intervalId;
         const clockUpdate = () => {
             let timer = getRemainingTime();
             timerHours.textContent = twoDigits(timer.hours);
             timerMinutes.textContent = twoDigits(timer.minutes);
             timerSeconds.textContent = twoDigits(timer.seconds);
-        };
 
-        const intervalId = setInterval(() => {
-            let timer = getRemainingTime();
-            if (timer.remainingTime > 0) {
-                clockUpdate();
-            } else {
+            if (timer.remainingTime <= 0) {
                 clearInterval(intervalId);
-                timerHours.textContent = '--';
-                timerMinutes.textContent = '--';
-                timerSeconds.textContent = '--';
+                timerHours.textContent = "--";
+                timerMinutes.textContent = "--";
+                timerSeconds.textContent = "--";
             }
-        }, 1000);
+        };
+        intervalId = setInterval(clockUpdate, 1000);
+
+        clockUpdate();
     };
 
     countTimer('07 march 2020 15:30:01');
