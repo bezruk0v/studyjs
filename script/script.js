@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
-
+    console.log(window.screen);
     // Таймер
     const countTimer = (deadline) => {
         // получаем элементы страницы
@@ -53,5 +53,172 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     countTimer('07 march 2020 15:30:01');
+
+    // меню
+    const toggleMenu = () => {
+        const btnMenu = document.querySelector('.menu'),
+            menu = document.querySelector('menu'),
+            closeBtn = document.querySelector('.close-btn'),
+            menuItems = menu.querySelectorAll('ul>li');
+        let stepLeft = 0;
+
+        const handlerMenu = () => {
+            let animId;
+            /*// вызов меню при помощи классов
+            if(!menu.style.transform || menu.style.transform === `translate(-100%)`) {
+                menu.style.transform = `translate(0)`;
+            } else {
+                menu.style.transform = `translate(-100%)`;
+            }*/
+            // вызов меню при помощи CSS
+            // menu.classList.toggle('active-menu');
+
+            // анимация
+            let animate = () => {
+                animId = requestAnimationFrame(animate);
+                if (stepLeft < document.documentElement.clientWidth) {
+                    stepLeft += 60;
+                    menu.style.left = stepLeft + 'px';
+                }   else {
+                    cancelAnimationFrame(animId);
+                }
+            };
+
+            // По клику запускает анимацию
+            let clickMenu = () => {
+                if (!menu.style.left) {
+                    animId = requestAnimationFrame(animate);
+                } else {
+                    stepLeft = 0;
+                    menu.removeAttribute('style');
+                    cancelAnimationFrame(animId);
+                }
+            };
+
+            // Показывает меню при 768px
+            let showMobileMenu = () => {
+                if (!menu.style.transform || menu.style.transform === 'translateX(-100%)') {
+                    menu.style.transform = 'translateX(0)';
+                } else {
+                    menu.style.transform = 'translateX(-100%)';
+
+                }
+            };
+
+            // Проверка расширения экрана
+            let checkWidth = () => {
+                if (document.documentElement.clientWidth  > 768) {
+                    clickMenu();
+                } else {
+                    // cancelAnimationFrame(animId);
+                    showMobileMenu();
+
+                }
+            };
+            checkWidth();
+
+        };
+
+        btnMenu.addEventListener('click', handlerMenu);
+        closeBtn.addEventListener('click', handlerMenu);
+        menuItems.forEach((elem) => elem.addEventListener('click', handlerMenu));
+    };
+    toggleMenu();
+
+    // pop-up окно
+/*    const togglePopUp = () => {
+        const popUp = document.querySelector('.popup'),
+        popUpBtn = document.querySelectorAll('.popup-btn'),
+        popUpClose = document.querySelector('.popup-close');
+
+        popUpBtn.forEach((elem) => {
+            elem.addEventListener('click', () => {
+               popUp.style.display = 'block';
+            });
+            popUpClose.addEventListener('click', () => popUp.style.display = 'none');
+
+            // закрываем модалку кликая по области вне
+            const closePopUp = (event) => {
+                const target = event.target;
+                if (target === popUp/!* ||
+                event.keyCode === 27*!/) {
+                    popUp.style.display = '';
+                    document.removeEventListener('click', closePopUp);
+                }
+            };
+            popUp.addEventListener('click', closePopUp);
+        });
+    };
+    togglePopUp();*/
+
+    // Выезжающий PopUp
+    const slidePopUp = () => {
+        const popup = document.querySelector('.popup'),
+            popupContent = document.querySelector('.popup-content'),
+            popupBtn = document.querySelectorAll('.popup-btn'),
+            popupClose = document.querySelector('.popup-close');
+
+        let stepLeft = 0;
+
+        const handlerPopUp = () => {
+            let animId;
+            let halfScreen = (document.documentElement.clientWidth * 0.5) - 191;
+
+            // Анимация
+            let animate = () => {
+                animId = requestAnimationFrame(animate);
+                if (stepLeft < (halfScreen)) {
+                    stepLeft += 40;
+                    popup.style.display = 'block';
+                    popupContent.style.left = stepLeft + 'px';
+                } else {
+                    cancelAnimationFrame(animId);
+                }
+            };
+
+            // По клику запускает анимацию
+            let clickPopUp = () => {
+                if (!popup.style.display) {
+                    animId = requestAnimationFrame(animate);
+                } else {
+                    stepLeft = 0;
+                    popup.removeAttribute('style');
+                    popupContent.removeAttribute('style');
+                    cancelAnimationFrame(animId);
+                }
+            };
+
+            // Показывает меню при 768px
+            let showMobilePopUp = () => {
+                if (!popup.style.display || popup.style.display === 'none') {
+                    popup.style.display = 'block';
+                } else {
+                    popup.style.display = 'none';
+
+                }
+            };
+
+            // Проверка расширения экрана
+            let checkWidth = () => {
+                if (document.documentElement.clientWidth > 768) {
+                    clickPopUp();
+                } else {
+                    // cancelAnimationFrame(animId);
+                    showMobilePopUp();
+                }
+            };
+
+            checkWidth();
+
+        };
+
+        popupBtn.forEach((elem) => {
+            elem.addEventListener('click', handlerPopUp);
+        });
+
+        popupClose.addEventListener('click', handlerPopUp);
+
+    };
+    slidePopUp();
 
 });
