@@ -126,33 +126,51 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleMenu();
 
     // pop-up окно
-/*    const togglePopUp = () => {
+    const togglePopUp = () => {
         const popUp = document.querySelector('.popup'),
         popUpBtn = document.querySelectorAll('.popup-btn'),
-        popUpClose = document.querySelector('.popup-close');
+        popUpContent = document.querySelector('.popup-content');
 
-        popUpBtn.forEach((elem) => {
-            elem.addEventListener('click', () => {
-               popUp.style.display = 'block';
-            });
-            popUpClose.addEventListener('click', () => popUp.style.display = 'none');
+        let count = -25,
+            flyInterval;
 
-            // закрываем модалку кликая по области вне
-            const closePopUp = (event) => {
-                const target = event.target;
-                if (target === popUp/!* ||
-                event.keyCode === 27*!/) {
-                    popUp.style.display = '';
-                    document.removeEventListener('click', closePopUp);
+        popUp.addEventListener('click', (event) => {
+            let target = event.target;
+            if (target.classList.contains('popup-close')) {
+                popUp.style.display = `none`;
+            } else {
+                target = target.closest('.popup-content');
+                if (!target) {
+                    popUp.style.display = `none`;
                 }
-            };
-            popUp.addEventListener('click', closePopUp);
+            }
+        });
+
+        // параметры анивации попАпа
+        const flyAnimate= () => {
+            flyInterval = requestAnimationFrame(flyAnimate);
+            count++;
+            if (count * 30 < (screen.width / 2.6)) {
+                popUpContent.style.left = count * 27 + 'px';
+            } else {
+                cancelAnimationFrame(flyInterval);
+                count = -25;
+            }
+        };
+
+        popUpBtn.forEach((item) => {
+            item.addEventListener('click', () => {
+                popUp.style.display = `block`;
+                if (screen.width >= 768) {
+                    flyInterval = requestAnimationFrame(flyAnimate);
+                }
+            });
         });
     };
-    togglePopUp();*/
+    togglePopUp();
 
     // Выезжающий PopUp
-    const slidePopUp = () => {
+/*    const slidePopUp = () => {
         const popup = document.querySelector('.popup'),
             popupContent = document.querySelector('.popup-content'),
             popupBtn = document.querySelectorAll('.popup-btn'),
@@ -219,6 +237,40 @@ document.addEventListener('DOMContentLoaded', () => {
         popupClose.addEventListener('click', handlerPopUp);
 
     };
-    slidePopUp();
+    slidePopUp();*/
+
+    // Скрол по кнопке
+    const scrolling = () => {
+        const menuItem = document.querySelectorAll('[href^="#"]'),
+            duration = 0.4;
+
+        menuItem.forEach((item) => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                let win = window.pageYOffset,
+                    hash = item.href.replace(/[^#]*(.*)/, '$1'),
+                    windowOffset = document.querySelector(hash).getBoundingClientRect().top,
+                    start = null;
+                const step = (time) => {
+                    if (start === null) {
+                        start = time;
+                    }
+                    let progress = time - start,
+                        temp = (windowOffset < 0 ? Math.max(win - progress / duration, win + windowOffset) :
+                            Math.min(win + progress/duration, win + windowOffset));
+                    window.scrollTo(0 , temp);
+                    if (temp !== win + windowOffset) {
+                        requestAnimationFrame(step);
+                    }
+                    else {
+                        location.hash = hash;
+                    }
+                };
+                requestAnimationFrame(step);
+            }, false);
+        });
+
+    };
+    scrolling();
 
 });
