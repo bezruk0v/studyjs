@@ -55,15 +55,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // меню
     const toggleMenu = () => {
-            // блок меню
+        // блок меню
         const menu = document.querySelector('menu');
-            // октрытие/закрытие меню через переключение класса
+        // октрытие/закрытие меню через переключение класса
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
         };
 
-            // ОС для "Меню"
-        document.addEventListener('click',(event) => {
+        // ОС для "Меню"
+        document.addEventListener('click', (event) => {
             let target = event.target;
 
             if (target.closest('.menu')) {
@@ -80,192 +80,70 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     toggleMenu();
 
-    // меню (old)
-    /*    const toggleMenu = () => {
-
-            const btnMenu = document.querySelector('.menu'),
-                menu = document.querySelector('menu'),
-                closeBtn = document.querySelector('.close-btn'),
-                menuItems = menu.querySelectorAll('ul>li');
-            let stepLeft = 0;
-
-            const handlerMenu = () => {
-                let animId;
-                /!*!// вызов меню при помощи классов
-                if(!menu.style.transform || menu.style.transform === `translate(-100%)`) {
-                    menu.style.transform = `translate(0)`;
-                } else {
-                    menu.style.transform = `translate(-100%)`;
-                }*!/
-                // вызов меню при помощи CSS
-                // menu.classList.toggle('active-menu');
-
-                // анимация
-                let animate = () => {
-                    animId = requestAnimationFrame(animate);
-                    if (stepLeft < document.documentElement.clientWidth) {
-                        stepLeft += 60;
-                        menu.style.left = stepLeft + 'px';
-                    }   else {
-                        cancelAnimationFrame(animId);
-                    }
-                };
-
-                // По клику запускает анимацию
-                let clickMenu = () => {
-                    if (!menu.style.left) {
-                        animId = requestAnimationFrame(animate);
-                    } else {
-                        stepLeft = 0;
-                        menu.removeAttribute('style');
-                        cancelAnimationFrame(animId);
-                    }
-                };
-
-                // Показывает меню при 768px
-                let showMobileMenu = () => {
-                    if (!menu.style.transform || menu.style.transform === 'translateX(-100%)') {
-                        menu.style.transform = 'translateX(0)';
-                    } else {
-                        menu.style.transform = 'translateX(-100%)';
-
-                    }
-                };
-
-                // Проверка расширения экрана
-                let checkWidth = () => {
-                    if (document.documentElement.clientWidth  > 768) {
-                        clickMenu();
-                    } else {
-                        // cancelAnimationFrame(animId);
-                        showMobileMenu();
-
-                    }
-                };
-                checkWidth();
-
-            };
-
-            btnMenu.addEventListener('click', handlerMenu);
-            closeBtn.addEventListener('click', handlerMenu);
-            menuItems.forEach((elem) => elem.addEventListener('click', handlerMenu));
-        };
-        toggleMenu();*/
-
-    // pop-up окно всплывающее
-    /*const togglePopUp = () => {
-        const popUp = document.querySelector('.popup'),
-            popUpBtn = document.querySelectorAll('.popup-btn'),
-            popUpContent = document.querySelector('.popup-content');
-
-        let count = -25,
-            flyInterval;
-
-        popUp.addEventListener('click', (event) => {
-            let target = event.target;
-            if (target.classList.contains('popup-close')) {
-                popUp.style.display = `none`;
-            } else {
-                target = target.closest('.popup-content');
-                if (!target) {
-                    popUp.style.display = `none`;
-                }
-            }
-        });
-
-        // параметры анимации попАпа
-        const flyAnimate = () => {
-            flyInterval = requestAnimationFrame(flyAnimate);
-            count++;
-            if (count * 30 < (screen.width / 2.6)) {
-                popUpContent.style.left = count * 27 + 'px';
-            } else {
-                cancelAnimationFrame(flyInterval);
-                count = -25;
-            }
-        };
-
-        popUpBtn.forEach((item) => {
-            item.addEventListener('click', () => {
-                popUp.style.display = `block`;
-                if (screen.width >= 768) {
-                    flyInterval = requestAnimationFrame(flyAnimate);
-                }
-            });
-        });
-    };
-    togglePopUp();*/
-
     // pop-up окно слайдер
     const slidePopUp = () => {
-        const popup = document.querySelector('.popup'),
-            popupContent = document.querySelector('.popup-content'),
-            popupBtn = document.querySelectorAll('.popup-btn'),
-            popupClose = document.querySelector('.popup-close');
-
+        const popUp = document.querySelector('.popup'),
+            popUpContent = document.querySelector('.popup-content'),
+            popUpBtn = document.querySelectorAll('.popup-btn');
         let stepLeft = 0;
 
         const handlerPopUp = () => {
             let animId;
             let halfScreen = (document.documentElement.clientWidth * 0.5) - 191;
 
-            // Анимация
-            let animate = () => {
-                animId = requestAnimationFrame(animate);
+            // закрывет модальное окно по нажатию вне его границ
+            popUp.addEventListener('click', (event) => {
+                let target = event.target;
+                if (target.classList.contains('popup-close')) {
+                    popUp.style.display = `none`;
+                } else {
+                    target = target.closest('.popup-content');
+                    if (!target) {
+                        popUp.style.display = `none`;
+                    }
+                }
+            });
+
+            // анимация - по клику вылетает окно слева
+            let popUpAnimation = () => {
+                animId = requestAnimationFrame(popUpAnimation);
+                popUp.style.display = 'block';
                 if (stepLeft < (halfScreen)) {
                     stepLeft += 40;
-                    popup.style.display = 'block';
-                    popupContent.style.left = stepLeft + 'px';
+                    popUpContent.style.left = stepLeft + 'px';
                 } else {
-                    cancelAnimationFrame(animId);
-                }
-            };
-
-            // По клику запускает анимацию
-            let clickPopUp = () => {
-                if (!popup.style.display) {
-                    animId = requestAnimationFrame(animate);
-                } else {
-                    stepLeft = 0;
-                    popup.removeAttribute('style');
-                    popupContent.removeAttribute('style');
                     cancelAnimationFrame(animId);
                 }
             };
 
             // Показывает меню при 768px
             let showMobilePopUp = () => {
-                if (!popup.style.display || popup.style.display === 'none') {
-                    popup.style.display = 'block';
+                if (!popUp.style.display || popUp.style.display === 'none') {
+                    popUp.style.display = 'block';
                 } else {
-                    popup.style.display = 'none';
-
+                    popUp.style.display = 'none';
                 }
             };
 
             // Проверка расширения экрана
             let checkWidth = () => {
                 if (document.documentElement.clientWidth > 768) {
-                    clickPopUp();
+                    popUpAnimation();
                 } else {
-                    // cancelAnimationFrame(animId);
                     showMobilePopUp();
                 }
             };
             checkWidth();
         };
 
-        popupBtn.forEach((elem) => {
+        popUpBtn.forEach((elem) => {
             elem.addEventListener('click', handlerPopUp);
         });
-
-        popupClose.addEventListener('click', handlerPopUp);
-
     };
     slidePopUp();
 
     // Скрол по кнопке
-    const scrolling = () => {
+/*    const scrolling = () => {
         const menuItem = document.querySelectorAll('[href^="#"]'),
             duration = 0.4;
 
@@ -282,12 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     let progress = time - start,
                         temp = (windowOffset < 0 ? Math.max(win - progress / duration, win + windowOffset) :
-                            Math.min(win + progress/duration, win + windowOffset));
-                    window.scrollTo(0 , temp);
+                            Math.min(win + progress / duration, win + windowOffset));
+                    window.scrollTo(0, temp);
                     if (temp !== win + windowOffset) {
                         requestAnimationFrame(step);
-                    }
-                    else {
+                    } else {
                         location.hash = hash;
                     }
                 };
@@ -296,11 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     };
-    scrolling();
+    scrolling();*/
 
     // Табы "Наши услуги"
     const tabs = () => {
-        let tabHeader = document.querySelector('.service-header'),
+        const tabHeader = document.querySelector('.service-header'),
             tab = tabHeader.querySelectorAll('.service-header-tab'),
             tabContent = document.querySelectorAll('.service-tab');
 
@@ -329,5 +206,106 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     tabs();
+
+    // слайдер
+    const slider = () => {
+        const slide = document.querySelectorAll('.portfolio-item'),
+            btn = document.querySelectorAll('.portfolio-btn'),
+            dots = document.querySelector('.portfolio-dots'),
+            slider = document.querySelector('.portfolio-content');
+
+        let currentSlide = 0,
+            interval;
+
+        // добавление дочек на слайдер
+        let dotItem;
+        const getDots = () => {
+            for (let i = 0; i < slide.length; i++) {
+                dotItem = document.createElement('li');
+                dotItem.classList.add('dot');
+                dots.append(dotItem);
+            }
+            dots.childNodes[1].classList.add('dot-active');
+
+        };
+        getDots();
+
+        const dot = document.querySelectorAll('.dot');
+
+        const prevSlide = (elem, index, strClass) => {
+            elem[index].classList.remove(strClass);
+        };
+        const nextSlide = (elem, index, strClass) => {
+            elem[index].classList.add(strClass);
+        };
+
+        const autoPlaySlider = () => {
+
+            prevSlide(slide, currentSlide, 'portfolio-item-active');
+            prevSlide(dot, currentSlide, 'dot-active');
+            currentSlide++;
+            if (currentSlide >= slide.length) {
+                currentSlide = 0;
+            }
+            nextSlide(slide, currentSlide, 'portfolio-item-active');
+            nextSlide(dot, currentSlide, 'dot-active');
+        };
+        const startSlider = (time = 3000) => {
+            interval = setInterval(autoPlaySlider, time);
+        };
+        const stopSlider = () => {
+            clearInterval(interval);
+        };
+
+        slider.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            let target = event.target;
+
+            if (!target.matches('.portfolio-btn, .dot')) {
+                return;
+            }
+
+            prevSlide(slide, currentSlide, 'portfolio-item-active');
+            prevSlide(dot, currentSlide, 'dot-active');
+
+            if (target.matches('#arrow-right')) {
+                currentSlide++;
+            } else if (target.matches('#arrow-left')) {
+                currentSlide--;
+            } else if (target.matches('.dot')) {
+                dot.forEach((elem, index) => {
+                    if (elem === target) {
+                        currentSlide = index;
+                    }
+                });
+            }
+
+            if (currentSlide >= slide.length) {
+                currentSlide = 0;
+            }
+            if (currentSlide < 0) {
+                currentSlide = slide.length - 1;
+            }
+
+            nextSlide(slide, currentSlide, 'portfolio-item-active');
+            nextSlide(dot, currentSlide, 'dot-active');
+
+        });
+        slider.addEventListener('mouseover', (event) => {
+            if (event.target.matches('.portfolio-btn') ||
+                event.target.matches('.dot')) {
+                stopSlider();
+            }
+        });
+        slider.addEventListener('mouseout', (event) => {
+            if (event.target.matches('.portfolio-btn') ||
+                event.target.matches('.dot')) {
+                startSlider();
+            }
+        });
+        startSlider(2000);
+    };
+    slider();
 
 });
