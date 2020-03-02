@@ -55,27 +55,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // меню
     const toggleMenu = () => {
-        // кнопка меню
-        const btnMenu = document.querySelector('.menu'),
             // блок меню
-            menu = document.querySelector('menu');
-        // btnClose = document.querySelector('.close-btn'),
-        // menuItem = menu.querySelectorAll('ul>li');
-
-        // октрытие/закрытие меню через переключение класса
+        const menu = document.querySelector('menu');
+            // октрытие/закрытие меню через переключение класса
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
         };
 
-        // ОС кнопки "Меню"
-        btnMenu.addEventListener('click', handlerMenu);
-        // меню закрывается по нажатию на крестик или пункт меню (с помощью делигирования)
-        menu.addEventListener('click', (event) => {
+            // ОС для "Меню"
+        document.addEventListener('click',(event) => {
             let target = event.target;
-            if (target.classList.contains('close-btn')) {
+
+            if (target.closest('.menu')) {
                 handlerMenu();
-            } else if (target.closest('a')) {
+            } else if (target.closest('.active-menu') && !target.classList.contains('active-menu')) {
                 handlerMenu();
+            } else {
+                target = target.closest('.active-menu');
+                if (menu.classList.contains('active-menu') && !target) {
+                    handlerMenu();
+                }
             }
         });
     };
@@ -153,8 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         toggleMenu();*/
 
-    // pop-up окно
-    const togglePopUp = () => {
+    // pop-up окно всплывающее
+    /*const togglePopUp = () => {
         const popUp = document.querySelector('.popup'),
             popUpBtn = document.querySelectorAll('.popup-btn'),
             popUpContent = document.querySelector('.popup-content');
@@ -174,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // параметры анивации попАпа
+        // параметры анимации попАпа
         const flyAnimate = () => {
             flyInterval = requestAnimationFrame(flyAnimate);
             count++;
@@ -195,9 +194,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     };
-    togglePopUp();
+    togglePopUp();*/
 
-    // Выезжающий PopUp
+    // pop-up окно слайдер
     const slidePopUp = () => {
         const popup = document.querySelector('.popup'),
             popupContent = document.querySelector('.popup-content'),
@@ -253,9 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showMobilePopUp();
                 }
             };
-
             checkWidth();
-
         };
 
         popupBtn.forEach((elem) => {
@@ -269,32 +266,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Скрол по кнопке
     const scrolling = () => {
-        const mainHeader = document.querySelector('main'),
-            menu = document.querySelector('menu'),
-            menuItem = menu.querySelectorAll('ul>li');
+        const menuItem = document.querySelectorAll('[href^="#"]'),
+            duration = 0.4;
 
-        const headerLinkScrollDown = mainHeader.lastElementChild;
-        headerLinkScrollDown.addEventListener('click', (elem) => {
-            elem.preventDefault();
-            const getId = headerLinkScrollDown.getAttribute('href');
-
-            document.querySelector(getId).scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
+        menuItem.forEach((item) => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                let win = window.pageYOffset,
+                    hash = item.href.replace(/[^#]*(.*)/, '$1'),
+                    windowOffset = document.querySelector(hash).getBoundingClientRect().top,
+                    start = null;
+                const step = (time) => {
+                    if (start === null) {
+                        start = time;
+                    }
+                    let progress = time - start,
+                        temp = (windowOffset < 0 ? Math.max(win - progress / duration, win + windowOffset) :
+                            Math.min(win + progress/duration, win + windowOffset));
+                    window.scrollTo(0 , temp);
+                    if (temp !== win + windowOffset) {
+                        requestAnimationFrame(step);
+                    }
+                    else {
+                        location.hash = hash;
+                    }
+                };
+                requestAnimationFrame(step);
+            }, false);
         });
 
-        for (let key of menuItem) {
-            key.addEventListener('click', (elem) => {
-                elem.preventDefault();
-                const linkId = key.getAttribute('href');
-
-                document.querySelector(linkId).scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
-            });
-        }
     };
     scrolling();
 
