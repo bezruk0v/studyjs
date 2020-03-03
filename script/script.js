@@ -308,4 +308,38 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     slider();
 
+    // замена фотографий при наведении в блоке "Наша команда"
+    const photoReplace = () => {
+            // получение фотографий
+        const commandPhoto = document.querySelectorAll('.command__photo');
+        commandPhoto.forEach((item) => {
+            // получение ссылки на фото
+            let currentPhoto = item.src;
+            // ОС: замена фото при наведении
+            item.addEventListener('mouseenter', (event) => {
+                event.target.src = event.target.dataset.img;
+            });
+            // ОС: возвращение фото по умолчанию при снятии наведения
+            item.addEventListener('mouseout', (event) => {
+                event.target.src = currentPhoto;
+            });
+        });
+    };
+    photoReplace();
+
+    // валидация полей калькулятора
+    const calcValidation = () => {
+        const calcItem = document.querySelectorAll('.calc-item');
+        // перебор элементов и разрешение ввода только цифр
+        calcItem.forEach((item) => {
+            if(!item.classList.contains('calc-type')) {
+                item.addEventListener('input', (event) => {
+                    let target = event.target;
+                    target.textContent = target.toString().replace(/[^0-9]/);
+                });
+            }
+        });
+    };
+    calcValidation();
+
 });
