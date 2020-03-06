@@ -85,12 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const popUp = document.querySelector('.popup'),
             popUpContent = document.querySelector('.popup-content'),
             popUpBtn = document.querySelectorAll('.popup-btn');
-        let stepLeft = 0;
+        let stepLeft = 0,
+            animId,
+            halfScreen = (document.documentElement.clientWidth * 0.5) - 191;
 
         const handlerPopUp = () => {
-            let animId;
-            let halfScreen = (document.documentElement.clientWidth * 0.5) - 191;
-
             // закрывет модальное окно по нажатию вне его границ
             popUp.addEventListener('click', (event) => {
                 let target = event.target;
@@ -108,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let popUpAnimation = () => {
                 animId = requestAnimationFrame(popUpAnimation);
                 popUp.style.display = 'block';
+                stepLeft++;
                 if (stepLeft < (halfScreen)) {
                     stepLeft += 40;
                     popUpContent.style.left = stepLeft + 'px';
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     slidePopUp();
 
-    // Скрол по кнопке
+    // скрол по кнопке
 /*    const scrolling = () => {
         const menuItem = document.querySelectorAll('[href^="#"]'),
             duration = 0.4;
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 let win = window.pageYOffset,
-                    hash = item.href.replace(/[^#]*(.*)/, '$1'),
+                    hash = item.href.replace(/[^#]*(.+)/, '$1'),
                     windowOffset = document.querySelector(hash).getBoundingClientRect().top,
                     start = null;
                 const step = (time) => {
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     scrolling();*/
 
-    // Табы "Наши услуги"
+    // табы "Наши услуги"
     const tabs = () => {
         const tabHeader = document.querySelector('.service-header'),
             tab = tabHeader.querySelectorAll('.service-header-tab'),
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentSlide = 0,
             interval;
 
-        // добавление дочек на слайдер
+        // добавление точек на слайдер
         let dotItem;
         const getDots = () => {
             for (let i = 0; i < slide.length; i++) {
@@ -341,5 +341,57 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     calcValidation();
+
+    // калькулятор
+    const calc = (price = 100) => {
+        const calcBlock = document.querySelector('.calc-block'),
+            calcType = document.querySelector('.calc-type'),
+            calcSquare = document.querySelector('.calc-square'),
+            calcDay = document.querySelector('.calc-day'),
+            calcRooms = document.querySelector('.calc-count'),
+            calcTotal = document.getElementById('total');
+
+        const countSum = () => {
+            let total = 0,
+                roomsValue = 1,
+                daysValue = 1;
+            const typeValue = calcType.options[calcType.selectedIndex].value,
+                squareValue = +calcSquare.value;
+
+                if (calcRooms.value > 1) {
+                    roomsValue += (calcRooms.value - 1) / 10;
+                }
+
+                if (calcDay.value && calcDay.value < 5) {
+                    daysValue *= 2;
+                } else if (calcDay.value && calcDay.value < 10) {
+                    daysValue *= 1.5;
+                }
+
+                if (typeValue && squareValue) {
+                    total = price * typeValue * squareValue * roomsValue * daysValue;
+                } else {
+                    total = 0;
+                }
+
+            calcTotal.textContent = Math.floor(total);
+        };
+
+        calcBlock.addEventListener('change', (event) => {
+            const target = event.target;
+            /*if (target.matches('.calc-type') || target.matches('.calc-square') ||
+                target.matches('.calc-day') || target.matches('.calc-count')) {
+                console.log(1);
+            }*/
+            /*if (target === calcType || target === calcSquare ||
+                target === calcDay || target === calcRooms) {
+                console.log(1);
+            }*/
+            if (target.matches('select') || target.matches('input')) {
+                countSum();
+            }
+        });
+    };
+    calc(100);
 
 });
