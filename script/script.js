@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         clockUpdate();
     };
-    countTimer('07 march 2020 15:30:01');
+    countTimer('07 march 2021 14:05:00');
 
     // меню
     const toggleMenu = () => {
@@ -143,37 +143,37 @@ document.addEventListener('DOMContentLoaded', () => {
     slidePopUp();
 
     // скрол по кнопке
-/*    const scrolling = () => {
-        const menuItem = document.querySelectorAll('[href^="#"]'),
-            duration = 0.4;
+    /*    const scrolling = () => {
+            const menuItem = document.querySelectorAll('[href^="#"]'),
+                duration = 0.4;
 
-        menuItem.forEach((item) => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                let win = window.pageYOffset,
-                    hash = item.href.replace(/[^#]*(.+)/, '$1'),
-                    windowOffset = document.querySelector(hash).getBoundingClientRect().top,
-                    start = null;
-                const step = (time) => {
-                    if (start === null) {
-                        start = time;
-                    }
-                    let progress = time - start,
-                        temp = (windowOffset < 0 ? Math.max(win - progress / duration, win + windowOffset) :
-                            Math.min(win + progress / duration, win + windowOffset));
-                    window.scrollTo(0, temp);
-                    if (temp !== win + windowOffset) {
-                        requestAnimationFrame(step);
-                    } else {
-                        location.hash = hash;
-                    }
-                };
-                requestAnimationFrame(step);
-            }, false);
-        });
+            menuItem.forEach((item) => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let win = window.pageYOffset,
+                        hash = item.href.replace(/[^#]*(.+)/, '$1'),
+                        windowOffset = document.querySelector(hash).getBoundingClientRect().top,
+                        start = null;
+                    const step = (time) => {
+                        if (start === null) {
+                            start = time;
+                        }
+                        let progress = time - start,
+                            temp = (windowOffset < 0 ? Math.max(win - progress / duration, win + windowOffset) :
+                                Math.min(win + progress / duration, win + windowOffset));
+                        window.scrollTo(0, temp);
+                        if (temp !== win + windowOffset) {
+                            requestAnimationFrame(step);
+                        } else {
+                            location.hash = hash;
+                        }
+                    };
+                    requestAnimationFrame(step);
+                }, false);
+            });
 
-    };
-    scrolling();*/
+        };
+        scrolling();*/
 
     // табы "Наши услуги"
     const tabs = () => {
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // замена фотографий при наведении в блоке "Наша команда"
     const photoReplace = () => {
-            // получение фотографий
+        // получение фотографий
         const commandPhoto = document.querySelectorAll('.command__photo');
         commandPhoto.forEach((item) => {
             // получение ссылки на фото
@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const calcItem = document.querySelectorAll('.calc-item');
         // перебор элементов и разрешение ввода только цифр
         calcItem.forEach((item) => {
-            if(!item.classList.contains('calc-type')) {
+            if (!item.classList.contains('calc-type')) {
                 item.addEventListener('input', (event) => {
                     let target = event.target;
                     target.textContent = target.toString().replace(/[^0-9]/);
@@ -358,21 +358,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const typeValue = calcType.options[calcType.selectedIndex].value,
                 squareValue = +calcSquare.value;
 
-                if (calcRooms.value > 1) {
-                    roomsValue += (calcRooms.value - 1) / 10;
-                }
+            if (calcRooms.value > 1) {
+                roomsValue += (calcRooms.value - 1) / 10;
+            }
 
-                if (calcDay.value && calcDay.value < 5) {
-                    daysValue *= 2;
-                } else if (calcDay.value && calcDay.value < 10) {
-                    daysValue *= 1.5;
-                }
+            if (calcDay.value && calcDay.value < 5) {
+                daysValue *= 2;
+            } else if (calcDay.value && calcDay.value < 10) {
+                daysValue *= 1.5;
+            }
 
-                if (typeValue && squareValue) {
-                    total = price * typeValue * squareValue * roomsValue * daysValue;
-                } else {
-                    total = 0;
-                }
+            if (typeValue && squareValue) {
+                total = price * typeValue * squareValue * roomsValue * daysValue;
+            } else {
+                total = 0;
+            }
 
             calcTotal.textContent = Math.floor(total);
         };
@@ -393,5 +393,65 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     calc(100);
+
+    // send-ajax-form
+    const sendForm = (id) => {
+        const errorMessage = 'Что-то пошло не так ...',
+            loadMessage = 'Загрузка...',
+            successMessage = 'Спасибо! Мы скоро свяжемся с вами!';
+
+        const form = document.getElementById('form1');
+
+        const statusMessage = document.createElement('div');
+        statusMessage.style.cssText = `font-size: 1.5rem; color: #fff`;
+
+        // запрос на сервер
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200) {
+                    outputData();
+                } else {
+                    errorData(request.status);
+                }
+            });
+            // запрос на сервер
+            request.open('POST', './server.php');
+            // добавление заголовков в JSON
+            request.setRequestHeader('Content-Type', 'application/json');
+
+            request.send(JSON.stringify(body));
+        };
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            form.appendChild(statusMessage);
+            statusMessage.textContent = loadMessage;
+
+            const formData = new FormData(form);
+            let body = {};
+
+            formData.forEach((value, key) => {
+                body[key] = value;
+            });
+
+            postData(body,
+                () => {
+                    statusMessage.textContent = successMessage;
+                },
+                (error) => {
+                    statusMessage.textContent = errorMessage;
+                    console.error(error);
+                }
+            );
+        });
+
+
+    };
+
+    sendForm();
 
 });
