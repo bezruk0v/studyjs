@@ -395,63 +395,103 @@ document.addEventListener('DOMContentLoaded', () => {
     calc(100);
 
     // send-ajax-form
-    const sendForm = (id) => {
-        const errorMessage = 'Что-то пошло не так ...',
+    const sendForm = () => {
+        // сообщения статусов
+        const errorMessage = 'Что-то пошло не так...',
             loadMessage = 'Загрузка...',
-            successMessage = 'Спасибо! Мы скоро свяжемся с вами!';
+            successMessage = 'Спасибо! Мы скоро с Вами свяжемся!',
+            // подлючение к формам обращений
+            form = document.querySelectorAll('form'),
+            // создание элемента для вывода сообщений статусов
+            statusMessage = document.createElement('div');
+        // форматирование текста сообщения
+        statusMessage.style.cssText = 'font-size: 1.5rem; color: #fff';
 
-        const form = document.getElementById('form1');
-
-        const statusMessage = document.createElement('div');
-        statusMessage.style.cssText = `font-size: 1.5rem; color: #fff`;
-
-        // запрос на сервер
+        // фунция запроса на сервер
         const postData = (body, outputData, errorData) => {
             const request = new XMLHttpRequest();
             request.addEventListener('readystatechange', () => {
                 if (request.readyState !== 4) {
                     return;
                 }
+                // выведение статуса об успешном загрузке при отсутствии ошибок
                 if (request.status === 200) {
                     outputData();
+                    form.forEach((elem) => {
+                        elem.querySelectorAll('input').forEach((index) => {
+                            index.value = '';
+                        });
+                    });
                 } else {
                     errorData(request.status);
                 }
             });
-            // запрос на сервер
+            // настройка отправки на сервер при помощи метода POST
             request.open('POST', './server.php');
             // добавление заголовков в JSON
             request.setRequestHeader('Content-Type', 'application/json');
-
+            // отправка объекта в формате JSON
             request.send(JSON.stringify(body));
         };
 
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            form.appendChild(statusMessage);
-            statusMessage.textContent = loadMessage;
+        form.forEach((element) => {
+            // отмена перезагрузки страницы
+            element.addEventListener('submit', (event) => {
+                event.preventDefault();
+                // добавление элемента
+                element.appendChild(statusMessage);
+                // добавление сообщения о начале загрузки
+                statusMessage.textContent = loadMessage;
+                // создание объекта FormData для сбора всех данных с формы
+                const formData = new FormData(element);
+                // запись данных в объект
+                let body = {};
+                formData.forEach((val, key) => {
+                    body[key] = val;
+                });
 
-            const formData = new FormData(form);
-            let body = {};
+                postData(body,
+                    () => {
+                        statusMessage.textContent = successMessage;
+                    },
+                    (error) => {
+                        statusMessage.textContent = errorMessage;
+                        console.log('error: ', error);
 
-            formData.forEach((value, key) => {
-                body[key] = value;
+                    });
+
             });
+        });
+    };
+    sendForm();
 
-            postData(body,
-                () => {
-                    statusMessage.textContent = successMessage;
-                },
-                (error) => {
-                    statusMessage.textContent = errorMessage;
-                    console.error(error);
-                }
-            );
+    // валидация данных
+    const inputValidation = () => {
+        // поделючение селектора body
+        const body = document.querySelector('body'),
+            // поделючение инпута почтового адреса
+            inputEmail = document.getElementsByName('user_email');
+
+        body.addEventListener('input', (event) => {
+            let target = event.target;
+            // валидация телефонного номера
+            if (target.matches('input[name="user_phone"]')) {
+                target.value = target.value.replace(/[^\+\d]/g, '');
+                inputEmail.forEach((e) => {
+                    e.setAttribute('required', '');
+                });
+            }
+            // валидация имени
+            if (target.matches('input[name="user_name"]') || target.matches('input[name="user_message"]')) {
+                target.value = target.value.replace(/[^а-яА-Я,.!?"';: ]/, '');
+            }
+            // валидация почтового адреса
+            if (target.matches('input[name="user_email"]')) {
+                target.value = target.value.replace(/[^a-zA-Z@.(0-9)]/, '');
+            }
         });
 
-
     };
-
-    sendForm();
+    inputValidation();
 
 });

@@ -414,9 +414,9 @@
 	</div>
 </div>
 
-<!--<script src="./plugins/validator/validator.js"></script>
+<script src="./plugins/validator/validator.js"></script>
 
-<script>
+<!--<script>
 	const headValidation = new Validator({
 		selector: '#form1',
 		pattern: {
@@ -440,6 +440,28 @@
 	});
 
 	const popUpValidation = new Validator({
+		selector: '#form3',
+		pattern: {
+			name: /(^([А-Я]{1})?[а-я]{1,14}$)/,
+			email: /^\w+\.\w+@\w+\.\w{2,}$/,
+		},
+		method: {
+			'form3-name': [
+				['notEmpty'],
+				['pattern', 'name'],
+			],
+			'form3-email': [
+				['notEmpty'],
+				['pattern', 'email'],
+			],
+			'form3-phone': [
+				['notEmpty'],
+				['pattern', 'phone'],
+			]
+		}
+	});
+
+	const lastFormValidation = new Validator({
 		selector: '#form2',
 		pattern: {
 			name: /(^([А-Я]{1})?[а-я]{1,14}$)/,
@@ -463,28 +485,6 @@
 				['notEmpty'],
 				['pattern', 'message'],
 			],
-		}
-	});
-
-	const lastFormValidation = new Validator({
-		selector: '#form3',
-		pattern: {
-			name: /(^([А-Я]{1})?[а-я]{1,14}$)/,
-			email: /^\w+\.\w+@\w+\.\w{2,}$/,
-		},
-		method: {
-			'form3-name': [
-				['notEmpty'],
-				['pattern', 'name'],
-			],
-			'form3-email': [
-				['notEmpty'],
-				['pattern', 'email'],
-			],
-			'form3-phone': [
-				['notEmpty'],
-				['pattern', 'phone'],
-			]
 		}
 	});
 

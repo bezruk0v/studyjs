@@ -108,15 +108,15 @@ class Validator {
         const style = document.createElement('style');
         style.textContent = `
       input.success {
-        border: 2px solid green
+        background-color: #B1D17F;
       }
       input.error {
-        border: 2px solid red
+        background-color: #CC7D93;
       }
       .validator-error {
-        color: red;
-        font-family: sans-serif;
-        font-size: 12px
+        color: #CC7D93;
+        font-family: sans-serif !important;
+        font-size: 13px !important;
       }
     `;
         // вставиляется в head
@@ -132,6 +132,14 @@ class Validator {
         if (!this.pattern.email) {
             // паттерн email по умолчанию
             this.pattern.email = /^\w+\.\w+@\w+\.\w{2,}$/;
+        }
+        if (!this.pattern.name) {
+            // паттерн имени: всё кроме латиницы, цифр и пробела
+            this.pattern.name = /^[а-яА-Я\s]*$/;
+        }
+        if (!this.pattern.message) {
+            // паттерн сообщения: Всё кроме латиницы, цифр и пробела
+            this.pattern.message = /^[а-яА-Я\s]*$/;
         }
 
     }
