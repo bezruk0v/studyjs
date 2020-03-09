@@ -409,28 +409,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // фунция запроса на сервер
         const postData = (body) => {
-            return new Promise((outputData, errorData) => {
-                const request = new XMLHttpRequest();
-                request.addEventListener('readystatechange', () => {
-                    if (request.readyState !== 4) {
-                        return;
-                    }
-                    // выведение статуса об успешном загрузке при отсутствии ошибок
-                    if (request.status === 200) {
-                        outputData();
-                    } else {
-                        errorData(request.status);
-                    }
-                });
-                // настройка отправки на сервер при помощи метода POST
-                request.open('POST', './server.php');
-                // добавление заголовков в JSON
-                request.setRequestHeader('Content-Type', 'application/json');
-                // отправка объекта в формате JSON
-                request.send(JSON.stringify(body));
+            return fetch('./server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
             });
         };
-
 
         form.forEach((element) => {
             // отмена перезагрузки страницы
@@ -448,14 +434,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     body[key] = val;
                 });
 
-                postData(body,
-                    () => {
+                postData(body)
+                    .then((response) => {
+                        if (response.status !== 200) {
+                            throw new Error('status network not 200');
+                        }
                         statusMessage.textContent = successMessage;
-                    },
-                    (error) => {
+                        form.reset();
+                    })
+                    .catch((error) => {
                         statusMessage.textContent = errorMessage;
-                        console.log('error: ', error);
-
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        setTimeout(() => {
+                            statusMessage.remove();
+                        }, 3000);
                     });
 
             });
