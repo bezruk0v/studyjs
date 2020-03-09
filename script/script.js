@@ -408,31 +408,29 @@ document.addEventListener('DOMContentLoaded', () => {
         statusMessage.style.cssText = 'font-size: 1.5rem; color: #fff';
 
         // фунция запроса на сервер
-        const postData = (body, outputData, errorData) => {
-            const request = new XMLHttpRequest();
-            request.addEventListener('readystatechange', () => {
-                if (request.readyState !== 4) {
-                    return;
-                }
-                // выведение статуса об успешном загрузке при отсутствии ошибок
-                if (request.status === 200) {
-                    outputData();
-                    form.forEach((elem) => {
-                        elem.querySelectorAll('input').forEach((index) => {
-                            index.value = '';
-                        });
-                    });
-                } else {
-                    errorData(request.status);
-                }
+        const postData = (body) => {
+            return new Promise((outputData, errorData) => {
+                const request = new XMLHttpRequest();
+                request.addEventListener('readystatechange', () => {
+                    if (request.readyState !== 4) {
+                        return;
+                    }
+                    // выведение статуса об успешном загрузке при отсутствии ошибок
+                    if (request.status === 200) {
+                        outputData();
+                    } else {
+                        errorData(request.status);
+                    }
+                });
+                // настройка отправки на сервер при помощи метода POST
+                request.open('POST', './server.php');
+                // добавление заголовков в JSON
+                request.setRequestHeader('Content-Type', 'application/json');
+                // отправка объекта в формате JSON
+                request.send(JSON.stringify(body));
             });
-            // настройка отправки на сервер при помощи метода POST
-            request.open('POST', './server.php');
-            // добавление заголовков в JSON
-            request.setRequestHeader('Content-Type', 'application/json');
-            // отправка объекта в формате JSON
-            request.send(JSON.stringify(body));
         };
+
 
         form.forEach((element) => {
             // отмена перезагрузки страницы
