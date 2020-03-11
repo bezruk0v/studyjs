@@ -15,7 +15,7 @@ const inputValidation = () => {
         }
         // валидация имени
         if (target.matches('input[name="user_name"]') || target.matches('input[name="user_message"]')) {
-            target.value = target.value.replace(/[^а-яА-Я,.!?"';: ]/, '');
+            target.value = target.value.replace(/[^а-яА-Я,.!?"';: ]/g, '');
         }
         // валидация почтового адреса
         if (target.matches('input[name="user_email"]')) {

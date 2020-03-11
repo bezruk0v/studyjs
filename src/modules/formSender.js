@@ -4,7 +4,7 @@ const sendForm = () => {
         loadMessage = 'Загрузка...',
         successMessage = 'Спасибо! Мы скоро с Вами свяжемся!',
         // подлючение к формам обращений
-        form = document.querySelectorAll('form'),
+        forms = document.querySelectorAll('form'),
         // создание элемента для вывода сообщений статусов
         statusMessage = document.createElement('div');
     // форматирование текста сообщения
@@ -21,16 +21,16 @@ const sendForm = () => {
         });
     };
 
-    form.forEach((element) => {
+    forms.forEach((form) => {
         // отмена перезагрузки страницы
-        element.addEventListener('submit', (event) => {
+        form.addEventListener('submit', (event) => {
             event.preventDefault();
             // добавление элемента
-            element.appendChild(statusMessage);
+            form.appendChild(statusMessage);
             // добавление сообщения о начале загрузки
             statusMessage.textContent = loadMessage;
             // создание объекта FormData для сбора всех данных с формы
-            const formData = new FormData(element);
+            const formData = new FormData(form);
             // запись данных в объект
             let body = {};
             formData.forEach((val, key) => {
