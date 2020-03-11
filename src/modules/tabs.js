@@ -14,6 +14,7 @@ const tabs = () => {
             }
         });
     };
+    toggleTabContent(0);
 
     tabHeader.addEventListener('click', (event) => {
         let target = event.target;
