@@ -2,7 +2,7 @@ const calc = (price = 100) => {
     const calcBlock = document.querySelector('.calc-block'),
         calcType = document.querySelector('.calc-type'),
         calcSquare = document.querySelector('.calc-square'),
-        calcDay = document.querySelector('.calc-day'),
+        calcDays = document.querySelector('.calc-day'),
         calcRooms = document.querySelector('.calc-count'),
         calcTotal = document.getElementById('total');
 
@@ -13,15 +13,15 @@ const calc = (price = 100) => {
         const typeValue = calcType.options[calcType.selectedIndex].value,
             squareValue = +calcSquare.value;
 
-        if (calcRooms.value === 0 || calcRooms.value === '0' || calcDay.value === 0 || calcDay.value === '0') {
+        if (calcRooms.value === 0 || calcRooms.value === '' || calcDays.value === 0 || calcDays.value === '') {
             total = 0;
         } else {
             if (calcRooms.value > 1) {
                 roomsValue += (calcRooms.value - 1) / 10;
             }
-            if (calcDay.value && calcDay.value < 5) {
+            if (calcDays.value && calcDays.value < 5) {
                 daysValue *= 2;
-            } else if (calcDay.value && calcDay.value < 10) {
+            } else if (calcDays.value && calcDays.value < 10) {
                 daysValue *= 1.5;
             }
             if (typeValue && squareValue) {
@@ -41,7 +41,7 @@ const calc = (price = 100) => {
             console.log(1);
         }*/
         /*if (target === calcType || target === calcSquare ||
-            target === calcDay || target === calcRooms) {
+            target === calcDays || target === calcRooms) {
             console.log(1);
         }*/
         if (target.matches('select') || target.matches('input')) {
