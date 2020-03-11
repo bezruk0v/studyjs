@@ -13,20 +13,22 @@ const calc = (price = 100) => {
         const typeValue = calcType.options[calcType.selectedIndex].value,
             squareValue = +calcSquare.value;
 
-        if (calcRooms.value > 1) {
-            roomsValue += (calcRooms.value - 1) / 10;
-        }
-
-        if (calcDay.value && calcDay.value < 5) {
-            daysValue *= 2;
-        } else if (calcDay.value && calcDay.value < 10) {
-            daysValue *= 1.5;
-        }
-
-        if (typeValue && squareValue) {
-            total = price * typeValue * squareValue * roomsValue * daysValue;
-        } else {
+        if (calcRooms.value === 0 || calcRooms.value === '0' || calcDay.value === 0 || calcDay.value === '0') {
             total = 0;
+        } else {
+            if (calcRooms.value > 1) {
+                roomsValue += (calcRooms.value - 1) / 10;
+            }
+            if (calcDay.value && calcDay.value < 5) {
+                daysValue *= 2;
+            } else if (calcDay.value && calcDay.value < 10) {
+                daysValue *= 1.5;
+            }
+            if (typeValue && squareValue) {
+                total = price * typeValue * squareValue * roomsValue * daysValue;
+            } else {
+                total = 0;
+            }
         }
 
         calcTotal.textContent = Math.floor(total);

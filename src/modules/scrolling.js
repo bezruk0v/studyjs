@@ -1,5 +1,5 @@
 const scrolling = () => {
-    const menuItem = document.querySelectorAll('[href^="#"]'),
+    const menuItem = document.querySelectorAll('[href^="#\w"]'),
         duration = 0.4;
 
     menuItem.forEach((item) => {
