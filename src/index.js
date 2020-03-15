@@ -11,6 +11,7 @@ elementClosest(window);*/
 import togglePopUp from './modules/togglePopUp';
 import sendForm from "./modules/formSender";
 import inputValidation from "./modules/validator";
+import accordion from "./modules/accordion";
 
 // Вызов модального окна из header и footer
 togglePopUp();
@@ -18,3 +19,6 @@ togglePopUp();
 sendForm();
 // Валидатор форм
 inputValidation();
+// Аккордеон 'Часто задаваемые вопросы'
+accordion('accordion');
+accordion('accordion-two');
