@@ -1,5 +1,6 @@
 'use strict';
 
+// функция переключения табов
 const accordion = (id) => {
     const accordion = document.getElementById(id),
         panelHeading = accordion.querySelectorAll('.panel-heading'),
@@ -28,7 +29,7 @@ const accordion = (id) => {
                 }
             });
             btn.forEach((item, i) => {
-                if (item === target.closest('.construct-btn')) {
+                if (item === target.closest('.construct-btn') && i !== 3) {
                     toggleTabContent(i + 1);
                 }
             });

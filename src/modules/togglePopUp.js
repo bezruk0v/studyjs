@@ -1,75 +1,33 @@
 'use strict';
-// модальное окно ['Перезвоните мне']
-const togglePopUp = () => {
 
-    const popUp = document.querySelectorAll('.popup'),
-        body = document.querySelector('body'),
-        popUpCall = document.querySelector('.popup-call'),
-        popUpDiscount = document.querySelector('.popup-discount'),
-        popUpCheck = document.querySelector('.popup-check'),
-        inputName = document.getElementsByName('user_name'),
-        inputPhone = document.getElementsByName('user_phone');
+// функция для открытия и закрытия модальных окон
+const togglePopUp = (popUpClass, btnClass) => {
+    // получаем необходимые элементы
+    const btn = document.querySelectorAll(btnClass),
+        popUp = document.querySelector(popUpClass);
 
-    const blockEmptyInput = () => {
-        inputName.forEach((elem) => {
-            elem.setAttribute('required', '');
+    // ОС - открытие модального окна при клике на "Перезвоните мне" в хедере и футере
+    btn.forEach((elem) => {
+        elem.addEventListener('click', () => {
+            popUp.style.display = 'block';
         });
-        inputPhone.forEach((elem) => {
-            elem.setAttribute('required', '');
-        });
-    };
+    });
 
-    const removeAttributeRequired = () => {
-        inputName.forEach((elem) => {
-            elem.removeAttribute('required', '');
-        });
-        inputPhone.forEach((elem) => {
-            elem.removeAttribute('required', '');
-        });
-    };
-
-    const openPopup = (event) => {
+    // ОС - закрытие модального окна при клике на крестик или на подложку
+    popUp.addEventListener('click', (event) => {
         let target = event.target;
+        // закрытие по крестику
+        if (target.classList.contains('popup-close')) {
+            popUp.style.display = 'none';
+        } else {
+            // закрытие по клику вне модалбного окна
+            target = target.closest('.popup-content');
 
-        if (target.classList.contains('call-btn')) {
-            event.preventDefault();
-            popUpCall.style.display = 'block';
-            blockEmptyInput();
+            if (!target) {
+                popUp.style.display = 'none';
+            }
         }
-
-        if (target.classList.contains('discount-btn')) {
-            event.preventDefault();
-            popUpDiscount.style.display = 'block';
-            blockEmptyInput();
-        }
-
-        if (target.classList.contains('check-btn')) {
-            event.preventDefault();
-            popUpCheck.style.display = 'block';
-            blockEmptyInput();
-        }
-
-        popUp.forEach((elem) => {
-            elem.addEventListener('click', (event) => {
-                let target = event.target;
-
-                if (target.classList.contains('popup-close')) {
-                    event.preventDefault();
-                    removeAttributeRequired();
-                    elem.style.display = 'none';
-                } else {
-                    target = target.closest('.popup-content');
-
-                    if (!target) {
-                        event.preventDefault();
-                        removeAttributeRequired();
-                        elem.style.display = 'none';
-                    }
-                }
-            });
-        });
-    };
-    body.addEventListener('click', openPopup);
+    });
 };
 
 export default togglePopUp;
